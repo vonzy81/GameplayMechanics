@@ -86,6 +86,9 @@ void AGameplayMechanicsCharacter::SetupPlayerInputComponent(UInputComponent* Pla
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGameplayMechanicsCharacter::Look);
+
+		// Attacking
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AGameplayMechanicsCharacter::Attack);
 	}
 	else
 	{
@@ -127,4 +130,13 @@ void AGameplayMechanicsCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attacking"));
+
+	UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
+
+	GetMesh()->PlayAnimation(AttackAnim, false);
 }
