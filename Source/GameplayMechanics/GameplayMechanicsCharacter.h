@@ -32,9 +32,6 @@ class AGameplayMechanicsCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta=(AllowPrivateAccess = "true"))
-	UAnimSequence* AttackAnim;
-
 	/** INPUTS */
 
 	/** Jump Input Action */
@@ -55,7 +52,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 
 public:
 	AGameplayMechanicsCharacter();
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= Input)
+	bool IsAttacking;
 
 protected:
 
@@ -80,5 +79,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintCallable)
+	void ThrowAxe(AActor* target);
 };
 

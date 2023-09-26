@@ -69,6 +69,18 @@ void AGameplayMechanicsCharacter::BeginPlay()
 	}
 }
 
+void AGameplayMechanicsCharacter::ThrowAxe(AActor* target)
+{
+	target->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *target->GetName())
+	
+	USkeletalMeshComponent* meshcomponent = target->FindComponentByClass<USkeletalMeshComponent>();
+	
+	if(meshcomponent)
+		meshcomponent->SetSimulatePhysics(true);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -136,7 +148,5 @@ void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attacking"));
 
-	UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
-
-	GetMesh()->PlayAnimation(AttackAnim, false);
+	IsAttacking = true; 
 }
