@@ -50,6 +50,8 @@ AGameplayMechanicsCharacter::AGameplayMechanicsCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+
+	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -67,6 +69,20 @@ void AGameplayMechanicsCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	TArray<UStaticMeshComponent*> staticMeshArray;
+	GetComponents<UStaticMeshComponent*>(staticMeshArray);
+
+	if(!staticMeshArray.IsEmpty())
+	{
+		for (auto staticMesh : staticMeshArray)
+		{
+			if(staticMesh->GetName() == "Axe")
+			{
+				AxeMesh = staticMesh;
+			}
+		}
+	}
 }
 
 void AGameplayMechanicsCharacter::ThrowAxe(AActor* target)
@@ -78,9 +94,6 @@ void AGameplayMechanicsCharacter::ThrowAxe(AActor* target)
 	if(meshcomponent)
 	{
 		meshcomponent->SetSimulatePhysics(true);
-	    
-	    
-	
 	}
 }
 
@@ -151,5 +164,13 @@ void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attacking"));
 
-	IsAttacking = true; 
+	AxeMesh->SetVisibility(false);
+	
+	PlayAnimMontage(ThrowMontage);
+
+	FVector SpawnLocation = FollowCamera->GetComponentLocation();
+	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
+	
+	AActor* NewAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
+
 }

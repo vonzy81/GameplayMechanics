@@ -31,8 +31,18 @@ class AGameplayMechanicsCharacter : public ACharacter
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
-	/** INPUTS */
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	UAnimMontage* ThrowMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	UStaticMeshComponent* AxeMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ANIM, meta=(AllowPrivateAccess = "true"))
+	TSubclassOf<AActor> AxeActor;
+	
+	/** INPUTS */
+	
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
