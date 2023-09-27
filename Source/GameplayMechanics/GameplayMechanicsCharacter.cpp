@@ -41,7 +41,7 @@ AGameplayMechanicsCharacter::AGameplayMechanicsCharacter()
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->SetupAttachment(GetMesh());
 	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
@@ -73,12 +73,15 @@ void AGameplayMechanicsCharacter::ThrowAxe(AActor* target)
 {
 	target->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *target->GetName())
-	
 	USkeletalMeshComponent* meshcomponent = target->FindComponentByClass<USkeletalMeshComponent>();
 	
 	if(meshcomponent)
+	{
 		meshcomponent->SetSimulatePhysics(true);
+	    
+	    
+	
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

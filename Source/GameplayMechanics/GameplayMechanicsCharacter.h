@@ -31,7 +31,6 @@ class AGameplayMechanicsCharacter : public ACharacter
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
-
 	/** INPUTS */
 
 	/** Jump Input Action */
