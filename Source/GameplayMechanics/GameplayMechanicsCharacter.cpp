@@ -50,7 +50,8 @@ AGameplayMechanicsCharacter::AGameplayMechanicsCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-
+	InHand = true;
+	Speed = 1000;
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -85,16 +86,33 @@ void AGameplayMechanicsCharacter::BeginPlay()
 	}
 }
 
-void AGameplayMechanicsCharacter::ThrowAxe(AActor* target)
+void AGameplayMechanicsCharacter::Tick(float DeltaSeconds)
 {
-	target->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	Super::Tick(DeltaSeconds);
 
-	USkeletalMeshComponent* meshcomponent = target->FindComponentByClass<USkeletalMeshComponent>();
-	
-	if(meshcomponent)
+	if(isReturning)
 	{
-		meshcomponent->SetSimulatePhysics(true);
+		if(!ThrownAxe) return;
+	
+		FVector Direction = (GetActorLocation() - ThrownAxe->GetActorLocation()).GetSafeNormal();
+		FVector Velocity = Direction * Speed;
+
+		ThrownAxe->SetActorLocation(ThrownAxe->GetActorLocation() += Velocity * DeltaSeconds);
+
+		if((ThrownAxe->GetActorLocation() - GetActorLocation()).Size() <= 10)
+		{
+			ThrownAxe->Destroy();
+
+			InHand = true;
+			AxeMesh->SetVisibility(true);
+			isReturning = false;
+		}
 	}
+}
+
+void AGameplayMechanicsCharacter::ReturnAxe()
+{
+	isReturning = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -164,6 +182,10 @@ void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attacking"));
 
+	if(!CanJump()) return;
+
+	if(!InHand) return;
+
 	AxeMesh->SetVisibility(false);
 	
 	PlayAnimMontage(ThrowMontage);
@@ -171,6 +193,8 @@ void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
 	FVector SpawnLocation = FollowCamera->GetComponentLocation();
 	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 	
-	AActor* NewAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
+	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
+
+	InHand = false;
 
 }

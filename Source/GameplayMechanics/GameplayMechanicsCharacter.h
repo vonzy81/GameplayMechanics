@@ -40,6 +40,12 @@ class AGameplayMechanicsCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ANIM, meta=(AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> AxeActor;
+
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	AActor* ThrownAxe;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	bool InHand;
 	
 	/** INPUTS */
 	
@@ -58,6 +64,11 @@ class AGameplayMechanicsCharacter : public ACharacter
 	/** Attack Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AttackAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	float Speed;
+
+	bool isReturning;
 
 public:
 	AGameplayMechanicsCharacter();
@@ -83,6 +94,8 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	virtual void Tick(float DeltaSeconds) override;
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -90,6 +103,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	UFUNCTION(BlueprintCallable)
-	void ThrowAxe(AActor* target);
+	void ReturnAxe();
 };
 
