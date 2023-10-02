@@ -36,6 +36,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 	UAnimMontage* ThrowMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	UAnimMontage* CatchMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
 	UStaticMeshComponent* AxeMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ANIM, meta=(AllowPrivateAccess = "true"))

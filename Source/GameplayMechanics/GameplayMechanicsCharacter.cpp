@@ -112,6 +112,8 @@ void AGameplayMechanicsCharacter::Tick(float DeltaSeconds)
 
 void AGameplayMechanicsCharacter::ReturnAxe()
 {
+	PlayAnimMontage(CatchMontage);
+	
 	isReturning = true;
 }
 
