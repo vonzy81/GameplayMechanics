@@ -52,6 +52,7 @@ AGameplayMechanicsCharacter::AGameplayMechanicsCharacter()
 
 	InHand = true;
 	Speed = 1000;
+	defaultFOV = FollowCamera->FieldOfView;
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -117,6 +118,18 @@ void AGameplayMechanicsCharacter::ReturnAxe()
 	isReturning = true;
 }
 
+void AGameplayMechanicsCharacter::ThrowAxe()
+{
+	AxeMesh->SetVisibility(false);
+
+	FVector SpawnLocation = FollowCamera->GetComponentLocation();
+	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
+	
+	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
+
+	InHand = false;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -137,6 +150,11 @@ void AGameplayMechanicsCharacter::SetupPlayerInputComponent(UInputComponent* Pla
 
 		// Attacking
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AGameplayMechanicsCharacter::Attack);
+
+		// Aiming
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &AGameplayMechanicsCharacter::AimDownSights);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &AGameplayMechanicsCharacter::StopAimDownSights);
+		
 	}
 	else
 	{
@@ -186,17 +204,25 @@ void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
 
 	if(!CanJump()) return;
 
-	if(!InHand) return;
-
-	AxeMesh->SetVisibility(false);
+	if(!InHand)
+	{
+		ReturnAxe();
+		return;
+	}
 	
 	PlayAnimMontage(ThrowMontage);
+}
 
-	FVector SpawnLocation = FollowCamera->GetComponentLocation();
-	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
-	
-	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
+void AGameplayMechanicsCharacter::AimDownSights(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AIMING"));
+	isAiming = true;
+	FollowCamera->SetFieldOfView(ZoomFOV);
+}
 
-	InHand = false;
-
+void AGameplayMechanicsCharacter::StopAimDownSights(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("STOP AIMING"));
+	isAiming = false;
+	FollowCamera->SetFieldOfView(defaultFOV);
 }

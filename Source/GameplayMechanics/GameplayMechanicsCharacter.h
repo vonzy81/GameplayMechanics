@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "GameplayMechanicsCharacter.generated.h"
@@ -49,6 +50,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
 	bool InHand;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	float ZoomFOV;
 	
 	/** INPUTS */
 	
@@ -68,10 +72,18 @@ class AGameplayMechanicsCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* AttackAction;
 
+	/** Aiming Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AimAction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
 	float Speed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
+	bool isAiming;
+
 	bool isReturning;
+	float defaultFOV;
 
 public:
 	AGameplayMechanicsCharacter();
@@ -88,6 +100,9 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	void Attack(const FInputActionValue& Value);
+
+	void AimDownSights(const FInputActionValue& Value);
+	void StopAimDownSights(const FInputActionValue& Value);
 			
 
 protected:
@@ -107,5 +122,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ReturnAxe();
+
+	UFUNCTION(BlueprintCallable)
+	void ThrowAxe();
 };
 
