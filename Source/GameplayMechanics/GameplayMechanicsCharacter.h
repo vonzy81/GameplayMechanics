@@ -134,8 +134,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector BQCurvePath(float t, FVector v1, FVector v2, FVector v3);
 
-	UFUNCTION(
-		BlueprintCallable)
+	UFUNCTION(BlueprintCallable)
 	void AxeReturnPath(FVector location, float deltatime);
 };
 

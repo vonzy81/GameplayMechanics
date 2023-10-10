@@ -55,7 +55,7 @@ AGameplayMechanicsCharacter::AGameplayMechanicsCharacter()
 	defaultFOV = FollowCamera->FieldOfView;
 
 	AxePath = CreateDefaultSubobject<USceneComponent>(TEXT("AxePath"));
-	AxePath->SetupAttachment(FollowCamera);
+	AxePath->SetupAttachment(GetMesh());
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -109,7 +109,7 @@ void AGameplayMechanicsCharacter::ThrowAxe()
 {
 	AxeMesh->SetVisibility(false);
 
-	FVector SpawnLocation = FollowCamera->GetComponentLocation();
+	FVector SpawnLocation = FollowCamera->GetComponentLocation() + FVector(150, 0, 0);
 	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 	
 	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
