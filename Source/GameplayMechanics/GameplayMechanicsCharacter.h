@@ -28,6 +28,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	USceneComponent* AxePath;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -84,6 +87,8 @@ class AGameplayMechanicsCharacter : public ACharacter
 
 	bool isReturning;
 	float defaultFOV;
+	float time;
+	FVector initialAxePos;
 
 public:
 	AGameplayMechanicsCharacter();
@@ -125,5 +130,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ThrowAxe();
+
+	UFUNCTION(BlueprintCallable)
+	FVector BQCurvePath(float t, FVector v1, FVector v2, FVector v3);
+
+	UFUNCTION(
+		BlueprintCallable)
+	void AxeReturnPath(FVector location, float deltatime);
 };
 

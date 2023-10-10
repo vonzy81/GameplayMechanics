@@ -53,6 +53,9 @@ AGameplayMechanicsCharacter::AGameplayMechanicsCharacter()
 	InHand = true;
 	Speed = 1000;
 	defaultFOV = FollowCamera->FieldOfView;
+
+	AxePath = CreateDefaultSubobject<USceneComponent>(TEXT("AxePath"));
+	AxePath->SetupAttachment(FollowCamera);
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -92,29 +95,13 @@ void AGameplayMechanicsCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	if(isReturning)
-	{
-		if(!ThrownAxe) return;
-	
-		FVector Direction = (GetActorLocation() - ThrownAxe->GetActorLocation()).GetSafeNormal();
-		FVector Velocity = Direction * Speed;
-
-		ThrownAxe->SetActorLocation(ThrownAxe->GetActorLocation() += Velocity * DeltaSeconds);
-
-		if((ThrownAxe->GetActorLocation() - GetActorLocation()).Size() <= 10)
-		{
-			ThrownAxe->Destroy();
-
-			InHand = true;
-			AxeMesh->SetVisibility(true);
-			isReturning = false;
-		}
-	}
+		AxeReturnPath(GetActorLocation(), DeltaSeconds);
 }
 
 void AGameplayMechanicsCharacter::ReturnAxe()
 {
 	PlayAnimMontage(CatchMontage);
-	
+	initialAxePos = ThrownAxe->GetActorLocation();
 	isReturning = true;
 }
 
@@ -128,6 +115,38 @@ void AGameplayMechanicsCharacter::ThrowAxe()
 	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
 
 	InHand = false;
+}
+
+FVector AGameplayMechanicsCharacter::BQCurvePath(float t, FVector v1, FVector v2, FVector v3)
+{
+	float u = 1-t;
+	float tt = t * t;
+	float uu = u * u;
+	FVector p = (uu * v1) + (2 * u * t * v2) + (tt * v3);
+	return p;
+}
+
+void AGameplayMechanicsCharacter::AxeReturnPath(FVector location, float deltatime)
+{
+	if(!ThrownAxe) return;
+
+	if(time <= 1)
+	{
+		ThrownAxe->SetActorLocation(BQCurvePath(time, initialAxePos, AxePath->GetComponentLocation(),
+			AxeMesh->GetComponentLocation()));
+
+		time += deltatime;
+	}
+
+	if(time >= 1)
+	{
+		ThrownAxe->Destroy();
+
+		InHand = true;
+		AxeMesh->SetVisibility(true);
+		isReturning = false;
+		time = 0;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
