@@ -109,7 +109,7 @@ void AGameplayMechanicsCharacter::ThrowAxe()
 {
 	AxeMesh->SetVisibility(false);
 
-	FVector SpawnLocation = FollowCamera->GetComponentLocation() + FVector(150, 0, 0);
+	FVector SpawnLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 150;
 	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 	
 	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
@@ -214,6 +214,14 @@ void AGameplayMechanicsCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+
+	if(isAiming)
+	{
+		FRotator camerarotation = GetFollowCamera()->GetComponentRotation();
+		camerarotation.Pitch = 0;
+
+		SetActorRotation(camerarotation);
 	}
 }
 
