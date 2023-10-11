@@ -245,6 +245,9 @@ void AGameplayMechanicsCharacter::AimDownSights(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("AIMING"));
 	isAiming = true;
 	FollowCamera->SetFieldOfView(ZoomFOV);
+
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 }
 
 void AGameplayMechanicsCharacter::StopAimDownSights(const FInputActionValue& Value)
@@ -252,4 +255,7 @@ void AGameplayMechanicsCharacter::StopAimDownSights(const FInputActionValue& Val
 	UE_LOG(LogTemp, Warning, TEXT("STOP AIMING"));
 	isAiming = false;
 	FollowCamera->SetFieldOfView(defaultFOV);
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 }
