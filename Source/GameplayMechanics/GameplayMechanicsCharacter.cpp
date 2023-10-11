@@ -100,7 +100,6 @@ void AGameplayMechanicsCharacter::Tick(float DeltaSeconds)
 
 void AGameplayMechanicsCharacter::ReturnAxe()
 {
-	PlayAnimMontage(CatchMontage);
 	initialAxePos = ThrownAxe->GetActorLocation();
 	isReturning = true;
 }
@@ -140,6 +139,7 @@ void AGameplayMechanicsCharacter::AxeReturnPath(FVector location, float deltatim
 
 	if(time >= 1)
 	{
+		PlayAnimMontage(CatchMontage);
 		ThrownAxe->Destroy();
 
 		InHand = true;
