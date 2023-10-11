@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "GameFramework/RotatingMovementComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -112,7 +114,7 @@ void AGameplayMechanicsCharacter::ThrowAxe()
 	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 	
 	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);
-
+	
 	InHand = false;
 }
 
@@ -133,6 +135,8 @@ void AGameplayMechanicsCharacter::AxeReturnPath(FVector location, float deltatim
 	{
 		ThrownAxe->SetActorLocation(BQCurvePath(time, initialAxePos, AxePath->GetComponentLocation(),
 			AxeMesh->GetComponentLocation()));
+
+		ThrownAxe->GetComponentByClass<URotatingMovementComponent>()->RotationRate = FRotator(0,-1000,0);
 
 		time += deltatime;
 	}
