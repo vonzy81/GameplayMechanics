@@ -111,7 +111,7 @@ protected:
 
 	void AimDownSights(const FInputActionValue& Value);
 	void StopAimDownSights(const FInputActionValue& Value);
-			
+	void RotateToCameraForward();		
 
 protected:
 	// APawn interface

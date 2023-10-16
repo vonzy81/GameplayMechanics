@@ -221,12 +221,7 @@ void AGameplayMechanicsCharacter::Look(const FInputActionValue& Value)
 	}
 
 	if(isAiming)
-	{
-		FRotator camerarotation = GetFollowCamera()->GetComponentRotation();
-		camerarotation.Pitch = 0;
-
-		SetActorRotation(camerarotation);
-	}
+		RotateToCameraForward();
 }
 
 void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
@@ -240,7 +235,8 @@ void AGameplayMechanicsCharacter::Attack(const FInputActionValue& Value)
 		ReturnAxe();
 		return;
 	}
-	
+
+	RotateToCameraForward();
 	PlayAnimMontage(ThrowMontage);
 }
 
@@ -262,4 +258,12 @@ void AGameplayMechanicsCharacter::StopAimDownSights(const FInputActionValue& Val
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+}
+
+void AGameplayMechanicsCharacter::RotateToCameraForward()
+{
+	FRotator camerarotation = GetFollowCamera()->GetComponentRotation();
+	camerarotation.Pitch = 0;
+
+	SetActorRotation(camerarotation);
 }
