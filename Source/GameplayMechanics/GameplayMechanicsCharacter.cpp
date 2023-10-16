@@ -136,7 +136,7 @@ void AGameplayMechanicsCharacter::AxeReturnPath(FVector location, float deltatim
 		ThrownAxe->SetActorLocation(BQCurvePath(time, initialAxePos, AxePath->GetComponentLocation(),
 			AxeMesh->GetComponentLocation()));
 
-		ThrownAxe->GetComponentByClass<URotatingMovementComponent>()->RotationRate = FRotator(0,-1000,0);
+		ThrownAxe->GetComponentByClass<URotatingMovementComponent>()->RotationRate = AxeRotatingRate;
 
 		time += deltatime;
 	}

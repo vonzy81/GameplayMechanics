@@ -85,6 +85,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	bool isAiming;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	FRotator AxeRotatingRate;
+
 	bool isReturning;
 	float defaultFOV;
 	float time;
