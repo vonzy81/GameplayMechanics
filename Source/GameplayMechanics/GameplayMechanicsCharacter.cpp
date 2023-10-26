@@ -104,13 +104,15 @@ void AGameplayMechanicsCharacter::ReturnAxe()
 {
 	initialAxePos = ThrownAxe->GetActorLocation();
 	isReturning = true;
+
+	PlayAnimMontage(PreCatchMontage);
 }
 
 void AGameplayMechanicsCharacter::ThrowAxe()
 {
 	AxeMesh->SetVisibility(false);
 
-	FVector SpawnLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 150;
+	FVector SpawnLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * thrownAxeSpawnDistance;
 	FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 	
 	ThrownAxe = GetWorld()->SpawnActor<AActor>(AxeActor, SpawnLocation, SpawnRotation);

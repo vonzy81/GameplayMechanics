@@ -41,6 +41,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
 	UAnimMontage* CatchMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	UAnimMontage* PreCatchMontage;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
 	UStaticMeshComponent* AxeMesh;
@@ -81,6 +84,9 @@ class AGameplayMechanicsCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= ANIM, meta=(AllowPrivateAccess = "true"))
 	float Speed;
+
+	UPROPERTY(EditAnywhere, Category= ANIM, meta=(AllowPrivateAccess = "true"))
+	float thrownAxeSpawnDistance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	bool isAiming;
